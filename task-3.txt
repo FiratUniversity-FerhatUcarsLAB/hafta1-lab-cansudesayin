@@ -1,4 +1,101 @@
-Öğrenci No:
-AD-SOYAD:
-
+Öğrenci No:250541096
+AD-SOYAD:Cansude Sayın
+seçtiğim algoritma "Müzik koleksiyonu düzenleme" 
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+ALGORITMA MUZIK_KOLEKSIYONU_DUZENLE
+
+BAŞLA
+
+    // 1. Veri girişi ve hazırlık
+    TANIMLA koleksiyon ← boş_liste
+    OKU toplam_sarki_sayisi
+
+    İÇİN i ← 1'DEN toplam_sarki_sayisi'NA KADAR YAP
+        YAZ "Şarkı", i, "bilgilerini girin:"
+        OKU sarki_adi, sanatçi, tür, yıl, puan
+        EKLE {sarki_adi, sanatçi, tür, yıl, puan} → koleksiyon
+    SON İÇİN
+
+    // 2. Kullanıcıdan sıralama tercihini al
+    YAZ "Sıralama kriteri seçin: (1) Yıl, (2) Sanatçı, (3) Tür, (4) Puan"
+    OKU kriter
+
+    YAZ "Sıralama türü seçin: (1) Artan, (2) Azalan"
+    OKU siralama_turu
+
+    // 3. Sıralama işlemi (SEÇME SIRALAMASI mantığı)
+    İÇİN i ← 1'DEN koleksiyon.uzunluk - 1'E KADAR YAP
+        min_index ← i
+
+        İÇİN j ← i+1'DEN koleksiyon.uzunluk'A KADAR YAP
+            // Karşılaştırma kriteri seçimine göre koşul
+            EĞER kriter == 1 İSE
+                karşılaştırma_alanı ← "yıl"
+            EĞER kriter == 2 İSE
+                karşılaştırma_alanı ← "sanatçi"
+            EĞER kriter == 3 İSE
+                karşılaştırma_alanı ← "tür"
+            EĞER kriter == 4 İSE
+                karşılaştırma_alanı ← "puan"
+
+            // Artan veya azalan sıralamaya göre karar
+            EĞER siralama_turu == 1 İSE // artan
+                EĞER koleksiyon[j][karşılaştırma_alanı] < koleksiyon[min_index][karşılaştırma_alanı] İSE
+                    min_index ← j
+                SON EĞER
+            DEĞİLSE // azalan
+                EĞER koleksiyon[j][karşılaştırma_alanı] > koleksiyon[min_index][karşılaştırma_alanı] İSE
+                    min_index ← j
+                SON EĞER
+            SON EĞER
+
+        SON İÇİN
+
+        // Elemanları yer değiştir
+        EĞER min_index ≠ i İSE
+            GEÇİCİ ← koleksiyon[i]
+            koleksiyon[i] ← koleksiyon[min_index]
+            koleksiyon[min_index] ← GEÇİCİ
+        SON EĞER
+    SON İÇİN
+
+    YAZ "Koleksiyon başarıyla sıralandı."
+
+    // 4. Kullanıcıya arama seçeneği sun
+    YAZ "Bir şarkı aramak ister misiniz? (E/H)"
+    OKU cevap
+
+    EĞER cevap == "E" VEYA cevap == "e" İSE
+        OKU aranan_sarki
+        bulundu ← YANLIŞ
+
+        // Arama stratejisi: Doğrusal arama
+        İÇİN i ← 1'DEN koleksiyon.uzunluk'A KADAR YAP
+            EĞER koleksiyon[i].sarki_adi == aranan_sarki İSE
+                YAZ "Şarkı bulundu!"
+                YAZ "Ad:", koleksiyon[i].sarki_adi
+                YAZ "Sanatçı:", koleksiyon[i].sanatçi
+                YAZ "Tür:", koleksiyon[i].tür
+                YAZ "Yıl:", koleksiyon[i].yıl
+                YAZ "Puan:", koleksiyon[i].puan
+                bulundu ← DOĞRU
+                DUR
+            SON EĞER
+        SON İÇİN
+
+        EĞER bulundu == YANLIŞ İSE
+            YAZ "Bu isimde bir şarkı koleksiyonda bulunamadı."
+        SON EĞER
+    SON EĞER
+
+    // 5. Risk değerlendirmesi veya öneri ekleme 
+    YAZ "Ortalama puan:", ORTALAMA(koleksiyon.puan)
+    EĞER ORTALAMA(koleksiyon.puan) < 5 İSE
+        YAZ "Uyarı: Koleksiyonun genel puanı düşük, beğenmediğiniz şarkıları silmeyi düşünebilirsiniz."
+    DEĞİLSE
+        YAZ "Koleksiyon oldukça yüksek puanlı!"
+    SON EĞER
+
+BİTİR
+
+SON ALGORITMA
