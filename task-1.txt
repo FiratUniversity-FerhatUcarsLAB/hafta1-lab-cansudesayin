@@ -1,4 +1,74 @@
-Öğrenci No:
-AD-SOYAD:
-
+Öğrenci No:250541096
+AD-SOYAD:Cansude Sayın
+seçtiğim algoritma "Optimum Bütçeli market alışverişi algoritması"
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+ALGORITMA OptimumButceliMarketAlisverisi
+
+BAŞLA
+
+    // 1. Girdiler
+    YAZ "Toplam bütçenizi girin:"
+    OKU butce
+
+    YAZ "Kaç ürün almak istiyorsunuz?"
+    OKU urun_sayisi
+
+    BOS liste <- []
+
+    // 2. Ürün bilgilerini al
+    İÇİN i <- 1 TO urun_sayisi YAP
+        YAZ "Ürün adı:"
+        OKU ad
+        YAZ "Fiyat:"
+        OKU fiyat
+        YAZ "Öncelik (1-5 arası, 5 = en önemli):"
+        OKU oncelik
+
+        listeyeEkle(liste, {ad, fiyat, oncelik})
+    SON İÇİN
+
+    // 3. Ürünleri önceliğe göre sırala (5'ten 1'e)
+    liste <- sirala(liste, "oncelik", AZALAN)
+
+    // 4. Sepet ve kalan bütçe başlat
+    sepet <- []
+    kalan_butce <- butce
+
+    // 5. Her ürünü sırayla değerlendir
+    İÇİN urun IN liste YAP
+        
+        EĞER urun.fiyat <= kalan_butce İSE
+            sepetEkle(sepet, urun)
+            kalan_butce <- kalan_butce - urun.fiyat
+        DEĞİLSE
+            YAZ urun.ad, " için bütçe yetersiz."
+            YAZ "Daha ucuz bir alternatif var mı? (E/H)"
+            OKU cevap
+
+            EĞER cevap = "E" İSE
+                YAZ "Alternatif ürün fiyatını girin:"
+                OKU yeni_fiyat
+
+                EĞER yeni_fiyat <= kalan_butce İSE
+                    sepetEkle(sepet, {urun.ad, yeni_fiyat, urun.oncelik})
+                    kalan_butce <- kalan_butce - yeni_fiyat
+                DEĞİLSE
+                    YAZ "Alternatif de bütçeyi aşıyor, ürün atlanıyor."
+                SON EĞER
+            SON EĞER
+        SON EĞER
+    SON İÇİN
+
+    // 6. Sonuçları yazdır
+    YAZ "--------------------------"
+    YAZ "Alınan ürünler:"
+    İÇİN urun IN sepet YAP
+        YAZ urun.ad, " - ", urun.fiyat, " TL"
+    SON İÇİN
+
+    YAZ "Kalan bütçe: ", kalan_butce, " TL"
+    YAZ "--------------------------"
+
+BİTİR
+
+SON ALGORITMA
