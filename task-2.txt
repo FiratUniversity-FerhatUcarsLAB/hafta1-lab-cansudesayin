@@ -1,4 +1,117 @@
-Öğrenci No:
-AD-SOYAD:
-
+Öğrenci No:250541096
+AD-SOYAD:Cansude Sayın
+seçtiğim algoritma "Monopoly'de en iyi hamle seçimi"
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+ALGORITMA MONOPOLY_EN_IYI_HAMLE()
+
+    BAŞLAT
+    oyuncular ← {oyuncu1, oyuncu2, ...}
+    oyun_tahtası ← 40_kare
+    şans_kartları ← karıştır(şans_kart_destesi)
+    kamu_kartları ← karıştır(kamu_kart_destesi)
+    kodes_konumu ← 10
+    max_tur ← 1000
+
+    HER oyuncu için:
+        oyuncu.konum ← 0
+        oyuncu.para ← 1500
+        oyuncu.kodeste ← FALSE
+        oyuncu.kodes_hakkı ← 0
+
+    TUR ← 1
+
+    TEKRARLA
+        HER oyuncu için:
+
+            EĞER oyuncu.kodeste == TRUE İSE
+                EĞER oyuncu.kodes_hakkı < 3 İSE
+                    zar1, zar2 ← ZAR_AT()
+                    EĞER zar1 == zar2 İSE
+                        oyuncu.kodeste ← FALSE
+                        oyuncu.kodes_hakkı ← 0
+                        oyuncu.konum ← (oyuncu.konum + zar1 + zar2) % 40
+                    DEĞİLSE
+                        oyuncu.kodes_hakkı ← oyuncu.kodes_hakkı + 1
+                        DEVAM_ET (tur atla)
+                DEĞİLSE
+                    oyuncu.kodeste ← FALSE
+                    oyuncu.para ← oyuncu.para - 50
+                    oyuncu.konum ← (oyuncu.konum + zar1 + zar2) % 40
+            DEĞİLSE
+                zar1, zar2 ← ZAR_AT()
+                toplam_zar ← zar1 + zar2
+                yeni_konum ← (oyuncu.konum + toplam_zar) % 40
+                oyuncu.konum ← yeni_konum
+
+            KARE ← oyun_tahtası[oyuncu.konum]
+
+            // KAREYE GÖRE DURUM
+            EĞER KARE.tip == "Mülk" İSE
+                EĞER mülk.sahibi == BOŞ
+                    EĞER oyuncu.para ≥ mülk.fiyat
+                        EĞER BEKLENEN_GETIRI(mülk) > ortalama_getiri
+                            SATIN_AL(mülk, oyuncu)
+                        DEĞİLSE
+                            PAS_GEÇ()
+                    DEĞİLSE
+                        PAS_GEÇ()
+                DEĞİLSE EĞER mülk.sahibi ≠ oyuncu
+                    KİRA_ÖDE(oyuncu, mülk.sahibi)
+            
+            EĞER KARE.tip == "Vergi"
+                oyuncu.para ← oyuncu.para - KARE.tutar
+            
+            EĞER KARE.tip == "Kodes"
+                oyuncu.kodeste ← TRUE
+                oyuncu.kodes_hakkı ← 0
+                oyuncu.konum ← kodes_konumu
+                DEVAM_ET
+
+            EĞER KARE.tip == "Şans"
+                kart ← ŞANS_KARTI_CEK(şans_kartları)
+                ŞANS_ETKISI_UYGULA(kart, oyuncu)
+
+            EĞER KARE.tip == "Kamu Fonu"
+                kart ← KAMU_KARTI_CEK(kamu_kartları)
+                KAMU_ETKISI_UYGULA(kart, oyuncu)
+
+            // ZAR TEKRARI KOŞULU
+            EĞER zar1 == zar2
+                çift_sayısı ← çift_sayısı + 1
+                EĞER çift_sayısı == 3
+                    oyuncu.kodeste ← TRUE
+                    oyuncu.konum ← kodes_konumu
+                    DEVAM_ET
+                DEĞİLSE
+                    tekrar_oyna ← TRUE
+            DEĞİLSE
+                çift_sayısı ← 0
+
+            // PARA KONTROLÜ
+            EĞER oyuncu.para ≤ 0
+                İFLAS_ET(oyuncu)
+
+        TUR ← TUR + 1
+    TA ki TUR == max_tur olana kadar
+
+    KAZANANI_BELİRLE()
+BİTİR
+
+-------------------------------------------------
+
+PROSEDÜR ŞANS_ETKISI_UYGULA(kart, oyuncu)
+    EĞER kart.tip == "para_artır"
+        oyuncu.para ← oyuncu.para + kart.değer
+    EĞER kart.tip == "para_azalt"
+        oyuncu.para ← oyuncu.para - kart.değer
+    EĞER kart.tip == "ileri_git"
+        oyuncu.konum ← (oyuncu.konum + kart.adım) % 40
+    EĞER kart.tip == "geri_git"
+        oyuncu.konum ← (oyuncu.konum - kart.adım + 40) % 40
+    EĞER kart.tip == "hapishaneye_git"
+        oyuncu.kodeste ← TRUE
+        oyuncu.konum ← kodes_konumu
+    EĞER kart.tip == "GOYA_git"
+        oyuncu.konum ← 0
+        oyuncu.para ← oyuncu.para + 200
+BİTİR
