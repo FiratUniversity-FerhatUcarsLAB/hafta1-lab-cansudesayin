@@ -1,4 +1,47 @@
-Öğrenci No:
-AD-SOYAD:
-
+Öğrenci No:250541096
+AD-SOYAD:Cansude Sayın
+seçtiğim algoritma "N kişi için adil pasta paylaşımı"
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+
+BAŞLA
+
+AL kişi_sayısı
+AL pasta ← [0, 100]
+pay_miktarı ← 100 / kişi_sayısı
+
+HER kişi için isteğini al: istek[kisi]
+
+HER kişi için pay[kisi] ← boş
+
+// 1. Pastanın her küçük aralığını sırayla kontrol et
+HER dilim ← 0'dan 100'e kadar 1 birim artarak YAP
+    isteyenler ← { k | istek[k] bu dilimi kapsıyor }
+    
+    EĞER isteyenler boş değilse
+        kişi_sayısı ← isteyenler'in uzunluğu
+        her_birine ← 1 / kişi_sayısı    // o 1 birim eşit bölünür
+        
+        HER k ∈ isteyenler İÇİN
+            EĞER pay[k]'nin toplamı < pay_miktarı İSE
+                pay[k]'ye her_birine kadar ekle
+            SON_EĞER
+        SON_İÇİN
+    DEĞİLSE
+        // 2. Bu dilimi kimse istemediyse, en az pay alan kişiye ver
+        min_paylı ← en az paya sahip kişi
+        EĞER pay[min_paylı]'nin toplamı < pay_miktarı İSE
+            pay[min_paylı]'ye 1 birim ekle
+        SON_EĞER
+    SON_EĞER
+SON_İÇİN
+
+// 3. Herkesin toplam payını kontrol et
+HER k ← 1’DEN kişi_sayısı’NA KADAR YAP
+    EĞER pay[k]'nin toplamı > pay_miktarı İSE
+        fazla_miktar ← pay[k]'nin toplamı - pay_miktarı
+        pay[k]'den fazla_miktarı çıkar
+    SON_EĞER
+SON_İÇİN
+
+YAZDIR pay[k] değerlerini (her kişinin aldığı bölgeler)
+BİTİR
