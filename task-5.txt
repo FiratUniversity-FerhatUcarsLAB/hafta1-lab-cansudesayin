@@ -1,4 +1,58 @@
-Öğrenci No:
-AD-SOYAD:
-
+Öğrenci No:250541096
+AD-SOYAD:Cansude Sayın
+seçtiğim algoritma "izlediğin bir filmi girince ona benzer başka filmeri bulma"
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+BAŞLA
+
+AL film_X
+AL film_veritabani     // film listesi ve özellikleri
+AL kriter_agirlikları  // örn: tür:0.4, oyuncular:0.3, puan:0.2, yıl:0.1
+
+BENZERLIK_SONUCLARI ← boş liste
+
+HER film_Y ∈ film_veritabani YAP
+    EĞER film_Y = film_X DEĞİLSE
+
+        benzerlik ← 0
+
+        // 1. Tür karşılaştırması
+        ortak_tur ← film_X.tur ∩ film_Y.tur
+        tür_puani ← |ortak_tur| / |film_X.tur ∪ film_Y.tur|
+        benzerlik ← benzerlik + tür_puani * kriter_agirlikları.tur
+
+        // 2. Oyuncu karşılaştırması
+        ortak_oyuncu ← film_X.oyuncular ∩ film_Y.oyuncular
+        oyuncu_puani ← |ortak_oyuncu| / |film_X.oyuncular ∪ film_Y.oyuncular|
+        benzerlik ← benzerlik + oyuncu_puani * kriter_agirlikları.oyuncular
+
+        // 3. Yönetmen karşılaştırması
+        EĞER film_X.yonetmen = film_Y.yonetmen İSE
+            benzerlik ← benzerlik + 1 * kriter_agirlikları.yonetmen
+        SON_EĞER
+
+        // 4. Puan karşılaştırması
+        puan_farkı ← ABS(film_X.puan - film_Y.puan)
+        puan_puani ← 1 - (puan_farkı / 10)     // 0–10 puan arası normalize
+        benzerlik ← benzerlik + puan_puani * kriter_agirlikları.puan
+
+        // 5. Yıl karşılaştırması
+        yil_farkı ← ABS(film_X.yil - film_Y.yil)
+        yil_puani ← 1 - (yil_farkı / 50)       // 50 yıl fark maksimum varsayalım
+        benzerlik ← benzerlik + yil_puani * kriter_agirlikları.yil
+
+        // Sonuçları kaydet
+        BENZERLIK_SONUCLARI ← BENZERLIK_SONUCLARI + (film_Y, benzerlik)
+
+    SON_EĞER
+SON_İÇİN
+
+// Benzerlik skorlarına göre sırala
+BENZERLIK_SONUCLARI ← BENZERLIK_SONUCLARI sıralı olarak en yüksekten en düşüğe
+
+// En benzer 5 filmi yazdır
+YAZ "Film_X ile en benzer filmler:"
+HER i ← 1’DEN 5’E KADAR YAP
+    YAZ BENZERLIK_SONUCLARI[i].film, "skor:", BENZERLIK_SONUCLARI[i].benzerlik
+SON_İÇİN
+
+BİTİR
