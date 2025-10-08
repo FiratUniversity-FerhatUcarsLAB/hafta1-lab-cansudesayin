@@ -1,7 +1,258 @@
 Öğrenci No:250541096
 AD-SOYAD:Cansude Sayın
-seçtiğim algoritma "Monopoly'de en iyi hamle seçimi"
+seçtiğim algoritma "Monopoly'de en iyi hamle seçimi" bu ödevi ChatGpt'den yardım alarak yaptım.
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+ChatGpt'ye sorduğum soru: "Monopoly’de en iyi hamle seçimi algoritması için adım adım algoritma geliştirmek istiyorum. Koşullu  durumları ve tekrar eden işlemleri de içeren detaylı bir pseudocode yazmama yardım eder misin"
+bu promptu önce kaba bir taslağını elde etmek için kullanıyorum ve buna ChatGpt'nin cevabı:
+Tabii! Monopoly gibi strateji ve şansa dayalı bir oyunda “en iyi hamle” algoritması biraz karmaşık olabilir, ama biz koşullu durumlar ve tekrar eden işlemleri kullanarak mantıklı bir pseudocode oluşturabiliriz.
+Bunu adım adım yapalım.
+
+🎯 1. Amaç
+
+Oyuncu sırası geldiğinde en yüksek kazanç / stratejik avantaj sağlayacak hamleyi seçmek.
+Kararları etkileyen faktörler:
+
+Mevcut para miktarı
+Rakiplerin pozisyonları
+Boşta olan mülkler
+Kira potansiyeli ve mülklerin renk grupları
+Kartlar (Şans / Topluluk Sandığı)
+
+🧩 2. Algoritmanın Temel Mantığı
+
+1.Veri Girişi:
+-Oyuncunun mevcut para miktarı (para)
+-Oyuncunun mevcut pozisyonu (pozisyon)
+-Boşta olan mülkler (bos_mulkler)
+-Rakiplerin pozisyonları (rakipler)
+
+2.Hamle Seçeneklerini Belirle:
+-Zar at → zar = 1..6 + 1..6
+-Hangi kareye gidileceğini hesapla: yeni_pozisyon = pozisyon + zar
+
+3.Koşullu Durumları Kontrol Et:
+-Eğer kare boşta bir mülkse:
+-Satın alma kararı (para >= fiyat + stratejik öncelik)
+-Eğer kare rakibe aitse:
+Kira ödemesi yap
+Eğer para yetersiz → ipotek, mülk satışı, vs.
+Eğer kare Özel kart/ceza/kazançsa:
+Kart etkisini uygula
+
+Hamle Değerlendirme (Strateji):
+
+Satın alma: potansiyel kira getirisi yüksekse öncelik ver
+Zaten sahip olunan renkten yeni mülk: tam renk seti oluşturma için öncelik ver
+Para yetersizse hamleyi optimize et (ipotek, satış, geçiş vs.)
+
+Sonuç:
+Seçilen hamleyi uygula
+Oyuncu durumu güncelle
+ALGORITMA MonopolyEnIyiHamle
+
+BAŞLA
+
+    // 1. Oyuncu ve oyun durumu bilgisi
+    OKU para
+    OKU pozisyon
+    OKU bos_mulkler
+    OKU rakipler
+
+    // 2. Zar at ve yeni pozisyonu hesapla
+    zar1 <- rastgele 1..6
+    zar2 <- rastgele 1..6
+    toplam_zar <- zar1 + zar2
+    yeni_pozisyon <- pozisyon + toplam_zar
+
+    // 3. Gideceğin kareyi kontrol et
+    EĞER yeni_pozisyon bir bos_mulkse İSE
+        fiyat <- yeni_pozisyon.fiyat
+        kira <- yeni_pozisyon.kira
+        EĞER para >= fiyat VE kira yüksekse İSE
+            YAZ "Mülkü satın al"
+            para <- para - fiyat
+            sahiplen(yeni_pozisyon)
+        DEĞİLSE
+            YAZ "Mülk satın alınmıyor"
+        SON EĞER
+
+    DEĞİLSE EĞER yeni_pozisyon rakibe aitse İSE
+        kira <- yeni_pozisyon.kira
+        YAZ "Rakibe kira öde:", kira
+        EĞER para >= kira İSE
+            para <- para - kira
+        DEĞİLSE
+            YAZ "Para yetmiyor, ipotek veya mülk satışı yap"
+        SON EĞER
+
+    DEĞİLSE EĞER yeni_pozisyon özel_kare İSE
+        YAZ "Özel kart etkisi uygulanıyor"
+        uygulaKareEtkisi(yeni_pozisyon)
+    SON EĞER
+
+    // 4. Hamle sonrası stratejik değerlendirme
+    İÇİN her_mulk IN sahip olunan mülkler YAP
+        EĞER renk_grubu_tam_olursa(her_mulk) İSE
+            YAZ "Tam renk seti tamamlandı, kira potansiyeli artır"
+        SON EĞER
+    SON İÇİN
+
+    YAZ "Hamle tamamlandı. Güncel para:", para
+
+BİTİR
+
+SON ALGORITMA
+
+Bu pseudocode’da:
+Döngüler: sahip olunan mülkleri kontrol etmek için kullanıldı (İÇİN … YAP / SON İÇİN)
+Koşullar: boş mülk, rakip mülk, özel kare durumlarını kontrol ediyor (EĞER … İSE / DEĞİLSE)
+Tekrar eden işlemler: her hamlede zar atma, mülk kontrolü, renk grubu kontrolü
+
+İstersen bir sonraki adımda bunu “en optimum hamleyi seçmek için puanlama sistemi” ekleyerek geliştirebiliriz.
+Bu sayede algoritma sadece kurallara göre değil, stratejik olarak da en iyi seçimi yapar.
+Bunu ekleyelim mi?
+
+kodes durumlarını da ekler misin?  burada oyundaki hamleleri etkileyen diğer durumları da değerlendirmek, daha detaylı ve daha doğru bir kod almak açısından diğer durumları eklemesini tek tek istiyorum, böylece kodun bütün yapısını değiştirmek yerine ekleyerek devam ediyor. 
+
+Buna ChatGpt'nin cevabı:
+
+Mükemmel 👏 çok güzel bir detay yakaladın — kodes (hapishane) Monopoly’de strateji açısından kritik bir durumdur.
+O zaman algoritmamızı biraz daha geliştirip kodesle ilgili koşulları ve döngüleri de ekleyelim.
+
+🎯 Amaç (Güncellenmiş)
+Oyuncunun hamle sırasında kodes durumlarını da dikkate alarak en avantajlı hareketi yapmasını sağlamak.
+
+🧩 1. Yeni Eklemeler
+
+Artık şu durumları da ele alacağız:
+Oyuncu kodese girerse, 3 tur boyunca çıkmayı deneyebilir.
+Çıkma seçenekleri:
+“Kodes’ten çıkış kartı” varsa kullanmak.
+50$ ödeyerek çıkmak.
+3 zar atımında çift zar gelirse çıkmak.
+Eğer 3 turda da çıkamazsa, para ödeyip çıkmak zorunda.
+
+⚙️ 2. Güncellenmiş Pseudocode (Koşullu + Döngülü + Kodes Dahil)
+ALGORITMA MonopolyEnIyiHamle
+
+BAŞLA
+
+    // 1. Oyuncu ve oyun durumu bilgisi
+    OKU para
+    OKU pozisyon
+    OKU bos_mulkler
+    OKU rakipler
+    OKU kodes_durumu        // "KODESTE", "SERBEST" veya "YENİ_GİRDİ"
+    OKU kodes_tur_sayisi     // Kodes'te kaç turdur bekliyor
+
+    // 2. Eğer oyuncu kodes değilse zar at
+    EĞER kodes_durumu = "SERBEST" İSE
+        
+        zar1 <- rastgele 1..6
+        zar2 <- rastgele 1..6
+        toplam_zar <- zar1 + zar2
+        yeni_pozisyon <- pozisyon + toplam_zar
+
+        // 2.a. Kodes'e girme durumu
+        EĞER yeni_pozisyon = "KODES" İSE
+            YAZ "Kodes'e gönderildiniz."
+            kodes_durumu <- "KODESTE"
+            kodes_tur_sayisi <- 0
+        DEĞİLSE
+            // 3. Normal kare kontrolü
+            EĞER yeni_pozisyon bir bos_mulkse İSE
+                fiyat <- yeni_pozisyon.fiyat
+                kira <- yeni_pozisyon.kira
+                EĞER para >= fiyat VE kira yüksekse İSE
+                    YAZ "Mülkü satın al"
+                    para <- para - fiyat
+                    sahiplen(yeni_pozisyon)
+                DEĞİLSE
+                    YAZ "Mülk satın alınmıyor"
+                SON EĞER
+
+            DEĞİLSE EĞER yeni_pozisyon rakibe aitse İSE
+                kira <- yeni_pozisyon.kira
+                YAZ "Rakibe kira öde:", kira
+                EĞER para >= kira İSE
+                    para <- para - kira
+                DEĞİLSE
+                    YAZ "Para yetmiyor, ipotek veya mülk satışı yap"
+                SON EĞER
+
+            DEĞİLSE EĞER yeni_pozisyon özel_kare İSE
+                YAZ "Özel kart etkisi uygulanıyor"
+                uygulaKareEtkisi(yeni_pozisyon)
+            SON EĞER
+        SON EĞER
+
+    // 4. Eğer oyuncu kodesteyse
+    DEĞİLSE EĞER kodes_durumu = "KODESTE" İSE
+
+        kodes_tur_sayisi <- kodes_tur_sayisi + 1
+        YAZ "Kodes turu:", kodes_tur_sayisi
+
+        EĞER elinde_kart("Kodes'ten çıkış") İSE
+            YAZ "Kodes'ten çıkış kartı kullanıldı."
+            kullanKart("Kodes'ten çıkış")
+            kodes_durumu <- "SERBEST"
+
+        DEĞİLSE
+            zar1 <- rastgele 1..6
+            zar2 <- rastgele 1..6
+            YAZ "Kodes denemesi: Zarlar", zar1, "ve", zar2
+
+            EĞER zar1 = zar2 İSE
+                YAZ "Çift zar geldi, serbest kaldınız!"
+                kodes_durumu <- "SERBEST"
+                kodes_tur_sayisi <- 0
+            DEĞİLSE EĞER kodes_tur_sayisi = 3 İSE
+                YAZ "3. tur doldu, 50$ ödeyerek çıkılıyor."
+                para <- para - 50
+                kodes_durumu <- "SERBEST"
+                kodes_tur_sayisi <- 0
+            DEĞİLSE
+                YAZ "Kodes'te kalmaya devam ediyorsunuz."
+            SON EĞER
+        SON EĞER
+    SON EĞER
+
+    // 5. Hamle sonrası stratejik değerlendirme
+    İÇİN her_mulk IN sahip olunan mülkler YAP
+        EĞER renk_grubu_tam_olursa(her_mulk) İSE
+            YAZ "Tam renk seti tamamlandı, kira potansiyeli artır."
+        SON EĞER
+    SON İÇİN
+
+    YAZ "Hamle tamamlandı. Güncel para:", para
+    YAZ "Kodes durumu:", kodes_durumu
+
+BİTİR
+
+SON ALGORITMA
+
+💡 3. Açıklamalar
+kodes_tur_sayisi: Her turda bir artar, 3’te sınıra gelir.
+zar1 = zar2: Çift zar kontrolü → çıkış hakkı.
+elinde_kart("Kodes'ten çıkış"): Şans veya Topluluk Sandığı kartlarından biri olabilir.
+Kodes’teyken diğer işlemler (mülk alma, kira ödeme) yapılmaz.
+
+İstersen bu algoritmaya “hamle puanlama sistemi” ekleyebiliriz:
+Her olası hamleye (örneğin “mülk al”, “bekle”, “ipotek yap”) puan verip en yüksek puanlı hamleyi otomatik seçen akıllı strateji algoritması haline getirebiliriz.
+
+Bunu da ekleyeyim mi?
+
+şuana kadar güzel şimdi oyuncu bazı noktalara geldiğinde şans kartı da çeksin. Burada oyundaki diğer etmenleri de işin içine katarak oyun stratejisini daha fazla geliştirmeyi hedefledim.
+Buna ChatGpt'nin cevabı:
+
+Birkaç saniye düşündüm
+
+Harika — çok güçlü bir istek. 🎯 Aşağıda karar verme mantığı, rakip hareketlerini öngörme, optimal strateji geliştirme ve risk değerlendirmesi öğelerini birleştiren gelişmiş bir pseudocode veriyorum. Tamamen Türkçe anahtar kelimelerle, BAŞLA / BİTİR ile biçimlendirilmiş ve hem mantıksal hem de sayısal (simülasyon/puanlama) yaklaşımları içeriyor.
+
+Özet: algoritma her olası hamleyi puanlar (beklenen fayda ve risk birleşimiyle), rakiplerin olası reaksiyonlarını modelleyip simüle eder (kısa vadeli lookahead / Monte-Carlo rollouts) ve oyuncunun risk toleransına göre en yüksek “beklenen fayda eksi risk cezası” değerini seçer.
+
+Gelişmiş Monopoly: En İyi Hamle Seçimi (Pseudocode)
+
 ALGORITMA MONOPOLY_EN_IYI_HAMLE()
 
     BAŞLAT
@@ -115,3 +366,10 @@ PROSEDÜR ŞANS_ETKISI_UYGULA(kart, oyuncu)
         oyuncu.konum ← 0
         oyuncu.para ← oyuncu.para + 200
 BİTİR
+
+İstersen bir sonraki adımda bu pseudocode’u Python benzeri bir yapıya çevirebiliriz (örneğin class Oyuncu, def en_iyi_hamle() vs. şeklinde).
+Yapay zekâ veya olasılık hesaplarını da (örneğin “hangi mülk alınmalı”) ekleyebiliriz.
+
+İster misin bu algoritmanın bir sonraki versiyonunu Python benzeri akış olarak düzenleyeyim?
+
+burdan sonra python'a geçtiği için ve son halinden memmnun kaldığım için daha fazla bir şey eklemedim.
