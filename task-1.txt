@@ -2,7 +2,7 @@
 AD-SOYAD:Cansude Sayın
 seçtiğim algoritma "Optimum Bütçeli market alışverişi algoritması" bu ödevi ChatGpt'den yararlanarak yaptım.
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
-ChatGpt'ye sorduğum soru; "Optimum Bütçeli market alışverişi algoritması için adım adım algoritma geliştirmek istiyorum. Koşullu durumları ve tekrar eden işlemleri de içeren detaylı bir pseudocode yazmama yardım eder misin?"
+ChatGpt'ye sorduğum soru: "Optimum Bütçeli market alışverişi algoritması için adım adım algoritma geliştirmek istiyorum. Koşullu durumları ve tekrar eden işlemleri de içeren detaylı bir pseudocode yazmama yardım eder misin?"
 ChatGpt'nin buna cevabı:
 Harika fikir 🌱 “Optimum bütçeli market alışverişi algoritması” hem koşullu durumlar (if-else) hem de tekrar eden işlemler (döngüler) içermeye çok uygun bir senaryo.
 Aşağıda sana adım adım açıklamalı şekilde ilerleyen ve sonunda tam bir pseudocode örneği vereceğim.
