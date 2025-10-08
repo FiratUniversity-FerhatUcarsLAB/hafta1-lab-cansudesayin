@@ -1,8 +1,231 @@
 Öğrenci No:250541096
 AD-SOYAD:Cansude Sayın
-seçtiğim algoritma "N kişi için adil pasta paylaşımı"
+seçtiğim algoritma "N kişi için adil pasta paylaşımı" bu ödevi ChatGpt'den yardım alarak yaptım.
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+N kişi icin adil pasta paylasımı algoritmasını nasıl pseudocode ile yapabilirim? öncelikle yine bir taslak alıp üzerinden devam etmek istedim
+Chatgpt'nin buna cevabı:
 
+Harika soru! 🎂
+“N kişi için adil pasta paylaşımı (Fair Cake Cutting)” problemi, algoritma ve oyun teorisinin kesiştiği klasik ve derin bir problemdir.
+Bu konu hem koşullu düşünme, hem tekrar eden işlem, hem de adalet optimizasyonu açısından mükemmel bir örnektir.
+
+Aşağıda hem mantığını, hem de bu düşünceyi adım adım pseudocode şeklinde anlatayım 👇
+
+🎯 Problem Tanımı
+Bir pasta var (toplam değer 1 birim kabul edilir).
+Bu pastayı N kişi arasında adil biçimde paylaştırmak istiyoruz.
+
+Ama:
+Her kişi pastanın farklı bölümlerini farklı derecede değerli bulabilir (örneğin biri kremayı sever, diğeri meyveyi).
+
+Amaç: herkes kendi payının en az diğerleri kadar değerli olduğunu düşündüğü bir dilim alsın.
+
+Yani:
+➡ Hiç kimse diğerinin payını kendi payından daha değerli bulmasın.
+(Buna envy-free fairness denir.)
+
+🧩 Karmaşık Problemi Parçalara Bölme
+
+Temel varsayımlar:
+-Pasta [0,1] aralığında bir çizgi gibi temsil edilir.
+-Her kişi, pastadaki her noktaya bir “değer fonksiyonu” atar (örneğin V₁(x)).
+
+Adalet kriteri:
+Her kişi kendi payını en az 1/N değerinde görmelidir.
+
+Yöntem seçimi:
+-N = 2 için kolay (Cut and Choose)
+-N > 2 için daha karmaşık (Last Diminisher, Selfridge–Conway gibi)
+
+Edge-case’ler:
+-Bazı kişiler aynı değeri verebilir (eşit bölme yeterlidir)
+-Bazıları bazı parçaları istemeyebilir (0 değer)
+
+🧠 En Temel Algoritma: “Cut and Choose” (2 kişi için)
+Mantık
+Kişi A pastayı adil olduğunu düşündüğü şekilde ikiye böler.
+Kişi B istediği dilimi seçer.
+
+Bu şekilde:
+A’nın gözünde iki parça eşittir → haksızlığa uğramaz.
+B istediğini seçtiği için o da memnundur.
+➡ Adil paylaşım.
+
+🔢 Gelişmiş Versiyon: “Last Diminisher Algorithm” (N kişi için)
+
+Bu algoritma herkesin görüşünü sırasıyla dikkate alır.
+Her kişi, “adil olduğunu düşündüğü dilimi” küçültebilir (dilimdeki değeri azaltarak).
+Son küçülten kişi o dilimi alır, kalan pasta tekrar paylaşılır.
+
+📜 Pseudocode: N kişi için “Last Diminisher” algoritması
+ALGORITMA ADIL_PASTA_PAYLASIMI_LAST_DIMINISHER
+
+BAŞLA
+
+    OKU N
+    TANIMLA pasta ← [0,1]        // 0'dan 1'e bir çizgi olarak temsil
+    TANIMLA kalan_pasta ← pasta
+    TANIMLA kisiler ← {K1, K2, ..., KN}
+
+    WHILE kalan_pasta ≠ BOŞ YAP
+
+        // 1. İlk kişi adil olduğunu düşündüğü dilimi keser
+        aktif_kisi ← kisiler[1]
+        kesim_noktasi ← aktif_kisi.KES(kalan_pasta, değer=1/N)
+        dilim ← kalan_pasta[0 : kesim_noktasi]
+        son_kucultucu ← aktif_kisi
+
+        // 2. Sıradaki kişiler bu dilimi değerlendirir
+        İÇİN i ← 2'DEN N'E KADAR YAP
+            EĞER kisiler[i].DEGER(dilim) > 1/N İSE
+                // fazla buldu, biraz küçültür
+                yeni_kesim ← kisiler[i].KES(dilim, değer=1/N)
+                dilim ← dilim[0 : yeni_kesim]
+                son_kucultucu ← kisiler[i]
+            SON EĞER
+        SON İÇİN
+
+        // 3. Son küçülten kişi bu dilimi alır
+        son_kucultucu.pay ← dilim
+        kalan_pasta ← kalan_pasta - dilim
+        kisiler ← kisiler - son_kucultucu  // o kişi artık tamamlandı
+
+    SON WHILE
+
+    // 4. Son kalan kişi, pastanın kalan kısmını alır
+    EĞER len(kisiler) = 1 İSE
+        kisiler[1].pay ← kalan_pasta
+    SON EĞER
+
+    // 5. Sonuçları göster
+    YAZ "Adil paylaşım tamamlandı:"
+    İÇİN kişi IN tüm_kisiler YAP
+        YAZ kişi.ad, "şu dilimi aldı:", kişi.pay
+    SON İÇİN
+
+BİTİR
+SON ALGORITMA
+
+🔍 Mantıksal Özellikler
+Özellik	Açıklama
+-Koşullu durumlar	Her kişi “adil mi değil mi” kararına göre dilimi küçültür.
+-Tekrar eden işlemler	Döngüyle herkesin sırasıyla kesim yapması sağlanır.
+-Optimizasyon düşüncesi	Pasta israf edilmeden tüm kişiler maksimum adaletle pay alır.
+-Karmaşık problemi parçalara bölme	Büyük paylaşım problemi kişi bazında alt adımlara ayrıldı.
+-Edge-case’ler	Tüm kişiler aynı değeri verirse ilk kesim adil olur, döngü hızlı biter.
+-Son kişi garantisi	En sona kalan kişi kalan pastayı alır, yine adil olur (çünkü herkes önceki dilimleri kabul etmiştir).
+
+🎯 Daha İleri Düzey (Opsiyonel)
+-N>3 kişiler için Selfridge–Conway algoritması kullanılabilir → tamamen “envy-free” (hiç kimse kimseye imrenmez).
+-Bilgisayar ortamında bu, değer fonksiyonlarını integral olarak tahmin etmekle yapılır.
+-Adaletin farklı türleri (ör. proportional, envy-free, equitability) arasında optimizasyon yapılabilir.
+İstersen bir sonraki adımda:
+
+🎂 “Pastanın değeri eşit ama istekler farklıysa” senaryosunu modelleyelim (ör. biri kenarı seviyor, biri kremayı)
+veya
+💻 bu algoritmayı simülasyon mantığında (örnek değerlerle çalışan) bir pseudocode’a çevireyim.
+Hangisini istersin?
+
+pastanın değeri eşit ama istekler farklıysa herkese miktar olarak eşit ancak istedikleri yerlerden ver, eğer birden fazla kişi aynı kısmı istiyorsa o kısımdan eşit bir şekilde isteyen kişilere dağıt ancak gün sonunda yine herkesin payına düşen miktar aynı olsun.
+
+Buna ChatGpt'nin verdiği cevap:
+Harika 👏
+Senin tanımına göre bu, adil fakat tercih-temelli pasta paylaşımı problemi — yani herkes aynı miktarda pasta alıyor ama istedikleri bölgelerden mümkün olduğunca fazla pay alıyor.
+
+O hâlde algoritmayı bu özel duruma göre yazalım:
+🍰 Adil Pasta Paylaşımı Algoritması (Tercih-temelli, N kişi için)
+
+🔹 Amaç:
+Toplam pasta miktarını tüm katılımcılara eşit şekilde bölmek,
+ama herkesin tercih ettiği bölgelerden olabildiğince almasını sağlamak.
+
+🔹 Girdi:
+N → kişi sayısı
+pasta → 0–100 arası pasta bölgesi (örneğin 0 baş, 100 son dilim noktası)
+istekler[i] → i. kişinin istediği aralık (örneğin [20, 50])
+
+🔹 Çıktı:
+pay[i] → i. kişinin aldığı dilim(ler) listesi
+Tüm pay[i]’lerin toplamı = 100 / N olacak şekilde
+
+🔹 Pseudocode:
+BAŞLA
+
+AL N                // kişi sayısı
+AL pasta_uzunluğu   // örneğin 100 birim
+pay_miktarı ← pasta_uzunluğu / N
+
+HER kişi için isteğini al: istekler[i]
+
+HER kişi için pay[i] ← boş
+
+// 1. Herkesin isteğini kontrol et
+FOR i ← 1 TO N
+    alan ← istekler[i]
+    
+    // 2. Bu alan başka biriyle çakışıyor mu?
+    ÇAKIŞANLAR ← { j | j ≠ i VE istekler[j] ∩ alan ≠ ∅ }
+    
+    EĞER ÇAKIŞANLAR boşsa
+        pay[i]’ye alan’dan pay_miktarı kadar ver
+    DEĞİLSE
+        // 3. Çakışan bölgeleri adilce paylaş
+        ortak_bölge ← istekler[i] ∩ istekler[ÇAKIŞANLAR]
+        kişi_sayısı ← 1 + |ÇAKIŞANLAR|
+        pay_bölümü ← ortak_bölge / kişi_sayısı
+        pay[i]’ye pay_bölümü ekle
+    SON_EĞER
+SON_FO
+
+// 4. Eğer birinin payı eksik kaldıysa
+FOR i ← 1 TO N
+    kalan ← pay_miktarı - (pay[i]’nin toplamı)
+    EĞER kalan > 0 ise
+        // En az talep edilen bölgeden kalan miktarı tamamla
+        boş_bölge ← (pasta - tüm payların birleşimi)
+        pay[i]’ye boş_bölge’den kalan kadar ver
+    SON_EĞER
+SON_FOR
+
+// 5. Çıktı:
+HER kişi için pay[i] yazdır
+
+BİTİR
+
+🔹 🔍 Kriterlere göre analiz:
+
+Karmaşık problemi parçalara bölme:
+-Önce istekleri alıyoruz
+-Çakışmaları buluyoruz
+-Çakışanları eşit paylaştırıyoruz
+-Eksikleri tamamlıyoruz
+
+Sistematik yaklaşım:
+-Her adım mantıksal sırayla ilerliyor — “istek → çakışma → dağıtım → kalan tamamlama”.
+
+Optimizasyon düşüncesi:
+-Pasta israfını önleyip herkesin istediği bölgeden maksimum pay almasını sağlıyor.
+
+Edge case (özel durumlar):
+-Tüm kişiler aynı bölgeyi isterse → bölge kişi sayısına bölünür.
+-Hiç kimse bir bölgeyi istemezse → kalan bölgeler eşit tamamlanır.
+-Bir kişi fazla isterse ama sınırı aşarsa → pay_miktarı kadar kesilir.
+
+İstersen bu algoritmanın örnek uygulamasını (örneğin 3 kişi ve 0–100 arası bir pasta) üzerinden adım adım gösterebilirim; nasıl paylaştığını netleştiririz.
+Yapayım mı?
+
+diyelim ki pastanın tamamı 100 olsun. her kişiye 100/N düşecek ve bu miktar pastanının neresini seçerlerse seçsinler değişmeyecek. Eğer birden fazla kişi pastanın aynı kısmını istiyorsa diyelim ki 70lik krema kısmından istiyorlar o zaman isteyen kişi sayısına 70lik kısmı dağıt ancak 100/N paylarına dahil olacak ekstra bir şey vermiyoruz. Buna göre bir algoritma tasarlayarak FOR kısımlarını vs türkçeye çevirip daha anlaşılır bir algoritma yazar mısın?
+
+Buna ChatGpt'nin verdiği cevap:
+Harika 👏
+Şimdi anlattığın versiyon, klasik “adil paylaşım” modelinden bir adım öte:
+“Tercih temelli sabit pay algoritması” diyebiliriz.
+Yani herkesin alacağı miktar sabit (100/N), ama pastanın hangi kısmını aldığı tercihlerine göre belirleniyor.
+Bir kısımda çok kişi toplanırsa o kısım bölünüyor, ama kimseye fazla verilmez.
+
+Aşağıda senin tanımına birebir uyan, koşullu durumları ve tekrar eden işlemleri içeren ayrıntılı bir pseudocode var 👇
+
+🔹 Pseudocode (Türkçe terimlerle):
 BAŞLA
 
 AL kişi_sayısı
