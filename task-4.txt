@@ -126,7 +126,7 @@ veya
 💻 bu algoritmayı simülasyon mantığında (örnek değerlerle çalışan) bir pseudocode’a çevireyim.
 Hangisini istersin?
 
-pastanın değeri eşit ama istekler farklıysa herkese miktar olarak eşit ancak istedikleri yerlerden ver, eğer birden fazla kişi aynı kısmı istiyorsa o kısımdan eşit bir şekilde isteyen kişilere dağıt ancak gün sonunda yine herkesin payına düşen miktar aynı olsun.
+ChatGpt'ye yazdığım: "pastanın değeri eşit ama istekler farklıysa herkese miktar olarak eşit ancak istedikleri yerlerden ver, eğer birden fazla kişi aynı kısmı istiyorsa o kısımdan eşit bir şekilde isteyen kişilere dağıt ancak gün sonunda yine herkesin payına düşen miktar aynı olsun."
 
 Buna ChatGpt'nin verdiği cevap:
 Harika 👏
@@ -214,7 +214,7 @@ Edge case (özel durumlar):
 İstersen bu algoritmanın örnek uygulamasını (örneğin 3 kişi ve 0–100 arası bir pasta) üzerinden adım adım gösterebilirim; nasıl paylaştığını netleştiririz.
 Yapayım mı?
 
-diyelim ki pastanın tamamı 100 olsun. her kişiye 100/N düşecek ve bu miktar pastanının neresini seçerlerse seçsinler değişmeyecek. Eğer birden fazla kişi pastanın aynı kısmını istiyorsa diyelim ki 70lik krema kısmından istiyorlar o zaman isteyen kişi sayısına 70lik kısmı dağıt ancak 100/N paylarına dahil olacak ekstra bir şey vermiyoruz. Buna göre bir algoritma tasarlayarak FOR kısımlarını vs türkçeye çevirip daha anlaşılır bir algoritma yazar mısın?
+ChatGpt'ye yazdığım: "diyelim ki pastanın tamamı 100 olsun. her kişiye 100/N düşecek ve bu miktar pastanının neresini seçerlerse seçsinler değişmeyecek. Eğer birden fazla kişi pastanın aynı kısmını istiyorsa diyelim ki 70lik krema kısmından istiyorlar o zaman isteyen kişi sayısına 70lik kısmı dağıt ancak 100/N paylarına dahil olacak ekstra bir şey vermiyoruz. Buna göre bir algoritma tasarlayarak FOR kısımlarını vs türkçeye çevirip daha anlaşılır bir algoritma yazar mısın?"
 
 Buna ChatGpt'nin verdiği cevap:
 Harika 👏
