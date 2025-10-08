@@ -1,7 +1,31 @@
 Öğrenci No:250541096
 AD-SOYAD:Cansude Sayın
-seçtiğim algoritma "izlediğin bir filmi girince ona benzer başka filmeri bulma"
+seçtiğim algoritma "izlediğin bir filmi girince ona benzer başka filmeri bulma" bu ödevi ChatGpt'den yardım alarak yaptım.
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+seçtiğim konunda genel olarak karşılaştığım bir problem dizi/film izleme platformlarının içerik olarak sadece kendi bünyesindeki dizi/filmlerle sınırlı olması veya çok yüzeysel öneriler sunmasıydı. Örneğin “Inception” izlediğimde sistem sadece “bilim kurgu” türündeki başka filmleri önerir, ama aynı zihin oyunları veya duygusal derinlik etkisini taşımıyor. Kendi algoritmamda bu yüzden tür karşılaştırmasına bir oran verirken %40'a sınırlamak istedim ve benzer puanlı olanları da işin içine katarak bir algoritma oluşturmak istedim.
+
+Bana izlediğim bir filmi girince belirli kriterleri bir araya getirerek ona en benzer filmleri bulabilecek bir algoritma yazabilir misin? puan tür vb.
+
+ChatGpt'nin buna cevabı:
+Harika! 🎬 Bu tamamen öneri algoritması (recommendation system) tarzı bir problem ve algoritmasını adım adım pseudocode olarak yazabiliriz.
+Senin istediğin gibi koşullu durumlar, tekrar eden işlemler, kriterlerin ağırlıkları gibi şeyleri de kapsayacak şekilde hazırlayabiliriz.
+
+🎯 Problem Tanımı
+Girdi: İzlediğin bir film (film_X)
+
+Amaç: film_X ile en benzer filmleri bulmak
+
+Benzerlik kriterleri örnekleri:
+Tür (genre)
+Yönetmen (director)
+Oyuncular (cast)
+IMDb puanı veya kullanıcı puanları
+Çıkış yılı
+
+Her kriterin bir ağırlığı olabilir (örn. tür %40, oyuncular %30, puan %20, yıl %10).
+Eğer aynı kriterlerden birden fazla film eşleşiyorsa, benzerlik skoru hesaplanır ve en yüksek skora sahip filmler seçilir.
+
+🔢 Pseudocode (Türkçe)
 BAŞLA
 
 AL film_X
@@ -56,3 +80,117 @@ HER i ← 1’DEN 5’E KADAR YAP
 SON_İÇİN
 
 BİTİR
+
+🔹 Açıklama
+Koşullu durumlar: Yönetmen aynı mı? Film_X kendisi mi?
+Tekrar eden işlemler: Tüm film veritabanında döngü → skor hesaplama
+Karmaşık problem parçalara bölünmüş: Her kriter ayrı bir adım olarak hesaplanıyor
+Optimizasyon: Ağırlıklar sayesinde hangi kriterin daha önemli olduğunu belirleyebilirsin
+
+İstersen bir sonraki adımda ben bunu örnek film ve oyuncularla simüle edip tabloyla gösterebilirim, böylece algoritmanın sonucu daha somut olur.
+Bunu yapayım mı?
+
+bu algoritmayı aynı filmi izleyenlerin beğendiği başka filmleri de önermesini sağlayacak şekilde Pseudocode yazar mısın? burada kullanıcı deneyimlerini de göz önünde bulundurarak benzerliği arttırmayı hedefledim
+
+ChatGpt'nin buna cevabı:
+Harika fikir 👏 Bu algoritma aslında hibrit öneri sistemi mantığında çalışıyor — yani hem içerik tabanlı (film özellikleri) hem de kullanıcı tabanlı (benzer izleyicilerin tercihleri) verileri kullanıyor.
+Aşağıda bu iki yaklaşımı birleştiren, koşullu durumlar ve tekrar eden işlemler içeren detaylı Türkçe pseudocode örneği var:
+
+🎬 Film Öneri Algoritması (Pseudocode)
+ALGORITMA Film_Oneri_Sistemi
+    GİRİŞ: 
+        Izlenen_Film, Film_Listesi, Kullanıcı_Verileri
+    ÇIKIŞ: 
+        Onerilen_Filmler_Listesi
+
+    BAŞLA
+        // 1. Film Özelliklerini Analiz Et
+        Izlenen_Tur ← Izlenen_Film.Tur
+        Izlenen_Yonetmen ← Izlenen_Film.Yonetmen
+        Izlenen_Puan ← Izlenen_Film.Puan
+        Izlenen_Oyuncular ← Izlenen_Film.Oyuncular
+
+        // 2. Benzer Özellikteki Filmleri Bul
+        BENZER_Filmler ← BOŞ_LISTE
+        HER Film İÇİN Film_Listesi
+            BENZERLIK_PUANI ← 0
+
+            EĞER Film.Tur = Izlenen_Tur İSE
+                BENZERLIK_PUANI ← BENZERLIK_PUANI + 3
+            SON EĞER
+
+            EĞER Film.Yonetmen = Izlenen_Yonetmen İSE
+                BENZERLIK_PUANI ← BENZERLIK_PUANI + 2
+            SON EĞER
+
+            ORTAK_OYUNCU_SAYISI ← KESİŞİM_SAYISI(Film.Oyuncular, Izlenen_Oyuncular)
+            BENZERLIK_PUANI ← BENZERLIK_PUANI + ORTAK_OYUNCU_SAYISI
+
+            PUAN_FARKI ← MUTLAK_DEGER(Film.Puan - Izlenen_Puan)
+            EĞER PUAN_FARKI < 1 İSE
+                BENZERLIK_PUANI ← BENZERLIK_PUANI + 1
+            SON EĞER
+
+            EĞER BENZERLIK_PUANI > 4 İSE
+                LİSTEYE_EKLE(BENZER_Filmler, Film)
+            SON EĞER
+        SON İÇİN
+
+        // 3. Aynı Filmi İzleyen Kullanıcıları Bul
+        BENZER_Kullanicilar ← BOŞ_LISTE
+        HER Kullanıcı İÇİN Kullanıcı_Verileri
+            EĞER Kullanıcı.Izledigi_Filmler İÇİNDE Izlenen_Film VARSA
+                LİSTEYE_EKLE(BENZER_Kullanicilar, Kullanıcı)
+            SON EĞER
+        SON İÇİN
+
+        // 4. Benzer Kullanıcıların Beğendiği Filmleri Topla
+        TOPLAM_ONERI_LISTESI ← BOŞ_LISTE
+        HER Kullanıcı İÇİN BENZER_Kullanicilar
+            HER Film İÇİN Kullanıcı.Begendigi_Filmler
+                EĞER Film ≠ Izlenen_Film İSE
+                    LİSTEYE_EKLE(TOPLAM_ONERI_LISTESI, Film)
+                SON EĞER
+            SON İÇİN
+        SON İÇİN
+
+        // 5. İçerik Benzerliği ve Kullanıcı Popülaritesini Birleştir
+        Onerilen_Filmler_Listesi ← BOŞ_LISTE
+        HER Film İÇİN BENZER_Filmler
+            POPÜLERLİK ← SAY(TOPLAM_ONERI_LISTESI, Film)
+            SKOR ← BENZERLIK_PUANI(Film) + POPÜLERLİK
+            EĞER SKOR > 5 İSE
+                LİSTEYE_EKLE(Onerilen_Filmler_Listesi, Film)
+            SON EĞER
+        SON İÇİN
+
+        // 6. Skora Göre Sırala
+        Onerilen_Filmler_Listesi ← AZALAN_SIRALA(Onerilen_Filmler_Listesi, SKOR)
+
+        // 7. İlk 5 Filmi Göster
+        ÇIKTI "Senin için önerilen filmler:"
+        İLK_5 ← İLK_N_ELEMAN(Onerilen_Filmler_Listesi, 5)
+        HER Film İÇİN İLK_5
+            YAZDIR Film.Ad
+        SON İÇİN
+    BİTİR
+SON ALGORITMA
+
+💡 Kriterlerin Kullanımı
+
+Karar verme mantığı: Film türü, yönetmen, puan, oyunculara göre ağırlıklı benzerlik.
+
+Kullanıcı öngörüsü: Aynı filmi izleyenlerin beğenileri ek veri olarak kullanılıyor.
+
+Optimizasyon: En yüksek “benzerlik + popülerlik” skoruna göre sıralama.
+
+Koşullar ve döngüler: EĞER, HER ... İÇİN, SON EĞER, SON İÇİN bolca kullanılıyor.
+
+Edge case (özel durumlar):
+Eğer hiç benzer film bulunmazsa, en popüler filmlerden öneri yapılabilir.
+Eğer kullanıcı verisi yetersizse sadece içerik tabanlı öneri devreye girer.
+
+İstersen bu algoritmanın örnek verilerle (örneğin 5 film + 3 kullanıcı) nasıl çalıştığını da adım adım simüle edebilirim.
+Yapalım mı?
+
+buradan sonra istediğim algoritmayı elde ettiğim ve edge case durumları da doğru çalıştığı için devam etmedim.
