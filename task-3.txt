@@ -1,7 +1,295 @@
 Öğrenci No:250541096
 AD-SOYAD:Cansude Sayın
-seçtiğim algoritma "Müzik koleksiyonu düzenleme" 
+seçtiğim algoritma "Müzik koleksiyonu düzenleme" bu ödevi ChatGpt'den yardım alarak yaptım.
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+ChatGpt'ye sorduğum soru: "Müzik koleksiyonunu düzenleme için adım adım algoritma geliştirmek istiyorum. Koşullu  durumları ve tekrar eden işlemleri de içeren detaylı bir pseudocode yazmama yardım eder misin?" bu metini tekrardan önce kaba bir taslak almak için kullandım.
+ChatGpt'nin buna cevabı:
+
+Amaç
+Bir müzik koleksiyonunu (dosyalar ve metadata) otomatik olarak tarayacak, temizleyecek, eksik bilgileri tamamlayacak, tekrar edenleri çözecek, tutarlı bir isimlendirme/tag yapısı kuracak ve playlist/rapor oluşturacak bir algoritma.
+
+Varsayımlar / Parametreler:
+kütüphane_dizini: taranacak ana klasör.
+yedek_dizini: işlem öncesi isteğe bağlı yedekleme klasörü.
+online_lookup: eksik metadata için çevrimiçi veri çekme (E/H).
+bitrate_eşik: tercih edilecek minimum kalite (kbps).
+tercih_edilen_surtum: (ör. "remastered", "original") — duplicate çözümünde tercih.
+interaktif_mod: kullanıcı onayı gerekip gerekmediği (E/H).
+duplikat_strateji: ("KEEP_HIGHEST_BITRATE","KEEP_LONGEST","PROMPT_USER").
+
+Pseudocode
+ALGORITMA MuzikKoleksiyonuDuzenle
+
+BAŞLA
+
+    // ---------- Ayarlar ve Girdiler ----------
+    YAZ "Kütüphane dizinini girin:"
+    OKU kutuphane_dizini
+
+    YAZ "Yedekleme yapmak istiyor musunuz? (E/H)"
+    OKU yedekle_istegi
+
+    EĞER yedekle_istegi = "E" İSE
+        YAZ "Yedek dizinini girin:"
+        OKU yedek_dizini
+    DEĞİLSE
+        yedek_dizini <- YOK
+    SON EĞER
+
+    YAZ "Çevrimiçi metadata araması yapılsın mı? (E/H)"
+    OKU online_lookup
+
+    YAZ "Bitrate eşiğini girin (kbps, örn: 192):"
+    OKU bitrate_esik
+
+    YAZ "Duplikat stratejisi seçin (KEEP_HIGHEST_BITRATE / KEEP_LONGEST / PROMPT_USER):"
+    OKU duplikat_strateji
+
+    YAZ "İnteraktif mod? (E/H)"
+    OKU interaktif_mod
+
+    // ---------- Veri Yapıları ----------
+    tracks_db <- BOŞ_LİSTE       // Her kayıt: {id, path, artist, title, album, year, genre, bitrate, duration, size, checksum, fingerprint, tags, kalite_puanı}
+    duplikatlar <- BOŞ_LİSTE     // İkili eşleşmeler veya kümeler
+    log <- BOŞ_LİSTE
+
+    // ---------- 1. (Opsiyonel) Yedekleme ----------
+    EĞER yedek_dizini ≠ YOK İSE
+        YAZ "Kütüphane yedekleniyor..."
+        KOPYALA_REKURSIF(kutuphane_dizini, yedek_dizini)
+        log.EKLE("Yedek oluşturuldu: " + yedek_dizini)
+    SON EĞER
+
+    // ---------- 2. Kütüphaneyi tara ve metadata çıkar ----------
+    YAZ "Dosyalar taranıyor..."
+    dosya_listesi <- REKURSIF_DOSYA_LISTESI(kutuphane_dizini, uzantilar = [mp3, flac, m4a, wav, ogg, aac])
+
+    İÇİN dosya IN dosya_listesi YAP
+        EĞER DOSYA_OKUNABİLİR_MI(dosya) = HAYIR İSE
+            log.EKLE("Okunamayan dosya taşındı: " + dosya)
+            TAŞI(dosya, kutuphane_dizini + "/quarantine/")
+            DEVAM_ET
+        SON EĞER
+
+        meta <- EXTRACT_METADATA(dosya)   // ID3/ Vorbis / MP4 tagları
+        audio_info <- READ_AUDIO_INFO(dosya) // bitrate, duration, size
+        checksum <- HASH(dosya)            // örn. SHA1
+        fingerprint <- AUDIO_FINGERPRINT(dosya) // akustik parmak izi
+
+        track <- {id: YENI_ID(), path: dosya, artist: meta.artist, title: meta.title, album: meta.album,
+                  year: meta.year, genre: meta.genre, bitrate: audio_info.bitrate,
+                  duration: audio_info.duration, size: audio_info.size,
+                  checksum: checksum, fingerprint: fingerprint, tags: meta.tags}
+
+        tracks_db.EKLE(track)
+    SON İÇİN
+
+    // ---------- 3. Metadata normalizasyonu ----------
+    YAZ "Metadata normalize ediliyor..."
+    İÇİN t IN tracks_db YAP
+        t.artist <- TRIM_AND_TITLECASE(t.artist)
+        t.title  <- TRIM_AND_TITLECASE(t.title)
+        t.album  <- TRIM_AND_TITLECASE(t.album)
+        t.genre  <- NORMALIZE_GENRE(t.genre)     // "hiphop" -> "Hip-Hop" vb.
+        EĞER t.year = YOK VE online_lookup = "E" İSE
+            ol_meta <- ONLINE_METADATA_LOOKUP(t.fingerprint veya t.artist,t.title)
+            EĞER ol_meta ≠ YOK İSE
+                t.album <- ol_meta.album veya t.album
+                t.year  <- ol_meta.year  or t.year
+                t.genre <- ol_meta.genre or t.genre
+                log.EKLE("Online metadata bulundu: " + t.path)
+            SON EĞER
+        SON EĞER
+    SON İÇİN
+
+    // ---------- 4. Duplikat tespiti ----------
+    YAZ "Duplikatlar aranıyor..."
+    // Öncelikli: checksum eşleşmesi -> kesin duplikat
+    checksum_map <- SÖZLUK()
+    İÇİN t IN tracks_db YAP
+        EĞER checksum_map.İÇERİYOR(t.checksum) İSE
+            duplikatlar.EKLE({t, checksum_map[t.checksum], neden: "checksum"})
+        DEĞİLSE
+            checksum_map[t.checksum] <- t
+        SON EĞER
+    SON İÇİN
+
+    // İkincil: fingerprint benzerliği + metadata benzerliği (olası farklı format/bitrate)
+    İÇİN i <- 1 TO UZUNLUK(tracks_db) YAP
+        İÇİN j <- i+1 TO UZUNLUK(tracks_db) YAP
+            t1 <- tracks_db[i]
+            t2 <- tracks_db[j]
+            EĞER t1.checksum = t2.checksum İSE
+                DEVAM_ET
+            SON EĞER
+            fp_sim <- FINGERPRINT_BENZERLIK(t1.fingerprint, t2.fingerprint)
+            meta_sim <- METADATA_BENZERLIK_SKOR(t1, t2) // artist+title+duration yakınlığı
+            EĞER fp_sim ≥ 0.90 VE meta_sim ≥ 0.8 İSE
+                duplikatlar.EKLE({t1, t2, neden: "fingerprint/meta", fp_sim: fp_sim, meta_sim: meta_sim})
+            SON EĞER
+        SON İÇİN
+    SON İÇİN
+
+    // ---------- 5. Duplikat çözümü ----------
+    YAZ "Duplikatlar çözülüyor..."
+    İÇİN grup IN GRUPLA_DUPLIKATLAR(duplikatlar) YAP
+        // grup: aynı şarkının tüm farklı örnekleri
+        // Her bir için kalite puanı hesapla: bitrate, duration_tutarlılığı, dosya_boyutu, tercihler
+        en_iyi <- YOK
+        EN_YUKSEK_PUAN <- -SONSUZ
+        İÇİN t IN grup YAP
+            puan <- 0
+            EĞER t.bitrate ≥ bitrate_esik İSE
+                puan <- puan + 50
+            SON EĞER
+            // tercihe göre surtum puanı
+            EĞER CONTAINS(t.tags, tercih_edilen_surtum) İSE
+                puan <- puan + 30
+            SON EĞER
+            puan <- puan + (t.duration / 10)    // uzunluk hafifçe avantaj
+            EĞER t.size > 0 İSE
+                puan <- puan + (t.size / 1000000) // MB üzerinden küçük bonus
+            SON EĞER
+
+            EĞER puan > EN_YUKSEK_PUAN İSE
+                EN_YUKSEK_PUAN <- puan
+                en_iyi <- t
+            SON EĞER
+        SON İÇİN
+
+        // Çözüm stratejisi
+        EĞER duplikat_strateji = "KEEP_HIGHEST_BITRATE" İSE
+            tut <- EN_YUKSEK_PUAN'e göre en_iyi
+            İÇİN t IN grup YAP
+                EĞER t ≠ tut İSE
+                    EĞER interaktif_mod = "E" İSE
+                        YAZ "Silinsin mi? ", t.path, " (tercih edilen: ", tut.path, ") (E/H)"
+                        OKU cevap
+                        EĞER cevap = "E" İSE
+                            TAŞI(t.path, kutuphane_dizini + "/duplicates_to_delete/")
+                            log.EKLE("Taşındı: " + t.path)
+                        DEĞİLSE
+                            log.EKLE("Kullanıcı iptal etti: " + t.path)
+                        SON EĞER
+                    DEĞİLSE
+                        TAŞI(t.path, kutuphane_dizini + "/duplicates_to_delete/")
+                        log.EKLE("Otomatik taşındı: " + t.path)
+                    SON EĞER
+                SON EĞER
+            SON İÇİN
+
+        DEĞİLSE EĞER duplikat_strateji = "KEEP_LONGEST" İSE
+            // benzer şekilde en uzun olanı tut, kalanları taşın
+            ... (yukarıya benzer)
+        DEĞİLSE // PROMPT_USER
+            İÇİN t IN grup YAP
+                YAZ "Bu dosya grup içinde: ", t.path, " meta:", t.artist, "-", t.title, " bitrate:", t.bitrate
+            SON İÇİN
+            YAZ "Hangi dosyayı tutmak istersiniz? (index girin)"
+            OKU secim
+            tut <- grup[secim]
+            // Diğerlerini taşımaya devam et
+        SON EĞER
+    SON İÇİN
+
+    // ---------- 6. Eksik etiketleri tamamla ve doğrula ----------
+    YAZ "Eksik etiketler kontrol ediliyor..."
+    İÇİN t IN tracks_db YAP
+        eksik <- FALSE
+        EĞER BOSMU(t.artist) VE online_lookup = "E" İSE
+            ol <- ONLINE_METADATA_LOOKUP(t.fingerprint veya t.path)
+            EĞER ol ≠ YOK İSE
+                t.artist <- ol.artist
+                t.title  <- ol.title
+                t.album  <- ol.album
+                t.year   <- ol.year
+                t.genre  <- ol.genre
+                eksik <- TRUE
+            SON EĞER
+        SON EĞER
+
+        // Eksik alan varsa veya metadata tutarsızsa kullanıcıya sor veya otomatik düzelt
+        EĞER eksik = TRUE VE interaktif_mod = "E" İSE
+            YAZ "Dosya için önerilen metadata:", t.path, " -> ", t.artist, "-", t.title, " (E/H kabul)"
+            OKU cevap
+            EĞER cevap = "E" İSE
+                WRITE_TAGS(t.path, t)
+                log.EKLE("Etiket yazıldı: " + t.path)
+            DEĞİLSE
+                log.EKLE("Kullanıcı metadatayı reddetti: " + t.path)
+            SON EĞER
+        DEĞİLSE EĞER eksik = TRUE VE interaktif_mod = "H" İSE
+            WRITE_TAGS(t.path, t)
+            log.EKLE("Otomatik etiket yazıldı: " + t.path)
+        SON EĞER
+    SON İÇİN
+
+    // ---------- 7. Dosya yeniden adlandırma / klasör yapısı ----------
+    YAZ "Dosyalar yeniden adlandırılıyor..."
+    // Örnek şablon: Artist/Year - Album/TrackNumber - Title.ext
+    şablon <- "{artist}/{year} - {album}/{tracknumber} - {title}.{ext}"
+    İÇİN t IN tracks_db YAP
+        yeni_path <- FORMAT_PATH_FROM_TEMPLATE(şablon, t)
+        EĞER yeni_path ≠ t.path İSE
+            YAPILABILIYOR_MU <- CHECK_DISK_SPACE_AND_PATH(yeni_path)
+            EĞER YAPILABILIYOR_MU = HAYIR İSE
+                log.EKLE("Yeniden adlandırma başarısız (alan yok): " + t.path)
+            DEĞİLSE
+                TAŞI(t.path, yeni_path)
+                t.path <- yeni_path
+                log.EKLE("Yeniden adlandırıldı: " + yeni_path)
+            SON EĞER
+        SON EĞER
+    SON İÇİN
+
+    // ---------- 8. Playlist / Klasör oluşturma ----------
+    YAZ "PlayListler oluşturuluyor..."
+    // Örnek: Tür bazlı playlist
+    türler <- UNIQUE([t.genre FOR t IN tracks_db])
+    İÇİN g IN türler YAP
+        liste <- FILTER(tracks_db, lambda x: x.genre = g)
+        SIRALA(liste, key = (x.artist, x.album, x.tracknumber))
+        SAVE_PLAYLIST(kutuphane_dizini + "/playlists/" + g + ".m3u", liste)
+        log.EKLE("Playlist oluşturuldu: " + g + ".m3u")
+    SON İÇİN
+
+    // ---------- 9. Raporlama ve günlük ----------
+    YAZ "Rapor hazırlanıyor..."
+    SAVE_LOG(kutuphane_dizini + "/duzenleme_log.txt", log)
+    SUMMARY <- {
+        toplam_dosya: UZUNLUK(tracks_db),
+        duplikatlar_bulundu: UZUNLUK(duplikatlar),
+        yedekleme_yapildi: (yedek_dizini ≠ YOK)
+    }
+    SAVE_JSON(kutuphane_dizini + "/summary.json", SUMMARY)
+
+    YAZ "Düzenleme tamamlandı. Özet:"
+    YAZ SUMMARY
+
+BİTİR
+
+SON ALGORİTMA
+
+Notlar & İyileştirme Fikirleri
+AUDIO_FINGERPRINT kullanmak (Chromaprint/AcoustID) farklı bitrate/formattaki aynı parçaları yüksek doğrulukla tespit eder.
+online_lookup için MusicBrainz/Discogs/AcoustID API’ları uygundur (API anahtarı gerekebilir).
+Büyük koleksiyonlarda N^2 karşılaştırmalar ağır olur; önce özet özniteliklere göre klasterle (artist+title hash veya duration bucket) sonra detaylı karşılaştır.
+Yedekleme (backup) kritik: silmeden önce her zaman yedek al veya quarantine klasörü kullan.
+interaktif_mod = H ile devam edersen otomasyonu tam çalıştırır; E ile kullanıcı onayı isteyen noktaları sorarsın.
+Opsiyonel olarak smart_playlists (ör. en çok dinlenen, düşük bitrate’li favori remaster’lar) eklenebilir.
+İstersen şimdi:
+Bu pseudocode’u Python script’ine çevirip küçük bir demo (ör. checksum ve basit metadata düzeltme) yapayım,
+Yoksa önce fingerprint tabanlı dupe tespit bölümünü daha detaylı ve verimli hale getireyim (ör. bucket/kuantizasyon yöntemi)?
+
+Hangi adımı istersin?
+
+Daha basitleştirilmiş ve anlaşılabilir versiyonunu arama stratejileri ve veri yapılandırmayı da kullanarak tekrar yapar mısın? burda verdiği kodu fazla detaylı ve pseudocode için yeterince anlaşılır bulmadığımdan kendi detaylarımı eklemeden önce daha basit versiyonu üzerinden ilerlemek istedim.
+
+Buna ChatGpt'nin cevabı:
+Harika 💿👏
+Hem adım adım düşünen, hem de koşullu durumlar ve tekrar eden işlemleri açıkça içeren bir versiyon yapalım.
+Yine sıralama, arama, veri yapılandırma ve karşılaştırma kriterleri mantığını koruyacağız ama daha detaylı, sistematik yazacağız.
+
 ALGORITMA MUZIK_KOLEKSIYONU_DUZENLE
 
 BAŞLA
@@ -99,3 +387,50 @@ BAŞLA
 BİTİR
 
 SON ALGORITMA
+
+💡 Bu sürümde ne değişti?
+Özellik	Açıklama
+Koşullar	Kullanıcının sıralama kriteri, sıralama türü ve arama isteği hep koşul yapısıyla kontrol ediliyor.
+Tekrarlar (Döngüler)	Şarkı girişi, sıralama döngüsü ve arama işlemleri hepsi döngüyle yapılmış.
+Veri yapısı	Koleksiyon listesi içinde her şarkı bir nesne/kayıt olarak saklanıyor.
+Karşılaştırma kriteri	Kullanıcı seçim yaparak sıralamanın hangi alana göre olacağını belirliyor.
+Ek analiz	Ortalama puan hesaplanarak öneri veya uyarı veriliyor (risk/kalite değerlendirmesi gibi).
+
+İstersen bir sonraki aşamada bu algoritmayı Python benzeri kod yapısına çevirebiliriz, yani “gerçek çalışan sürüm” gibi görünmesini sağlayabiliriz.
+Böyle bir sürüm ister misin?
+
+hayır da min index vs yazdığın ne? kodu bu haliyle daha iyi anlamak için soruyorum.
+Buna ChatGpt'nin cevabı:
+“min_index” aslında sıralama algoritmalarında çok sık kullanılan bir geçici değişken ve seçme sıralaması (selection sort) mantığıyla ilgilidir. Açıklayayım:
+
+1️⃣ Amaç
+
+Sıralama yaparken, dizinin kalan kısmındaki en küçük (ya da en büyük) elemanın indeksini tutmak için kullanılır. Böylece bir tur sonunda o elemanla mevcut pozisyon yer değiştirilebilir.
+
+2️⃣ Örnek
+
+Diyelim ki elimizde küçük bir liste var:
+koleksiyon = [8, 3, 5, 1]
+
+Artan sıraya göre seçme sıralaması:
+
+İlk tur: i = 0 → min_index = 0
+j = 1 → 3 < 8 → min_index = 1
+j = 2 → 5 < 3? Hayır → min_index = 1
+j = 3 → 1 < 3 → min_index = 3
+→ En küçük eleman 1 → indeks 3, i=0 ile yer değiştir → koleksiyon = [1,3,5,8]
+
+Sonraki turlar aynı şekilde devam eder.
+
+3️⃣ Yani kısaca
+
+min_index = şu anki döngüde en küçük (veya en büyük) değerin bulunduğu indeks
+Döngü sonunda bu indeks, mevcut pozisyonla değiştirilir.
+Bu yöntem seçme sıralamasının temel mantığıdır.
+
+İstersen sana aynı mantığı artalan mantıkla ve Türkçe değişken isimleriyle görselleştirebilirim, böylece min_index yerine “en_kucuk_indeks” gibi daha anlaşılır bir isim de kullanabiliriz.
+
+Bunu yapayım mı?
+
+Anladım gerek yok teşekkürler. Burada kodun üstteki halini anladığım için değiştirmek istemedim.
+
