@@ -4,7 +4,7 @@ seçtiğim algoritma "izlediğin bir filmi girince ona benzer başka filmeri bul
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
 seçtiğim konunda genel olarak karşılaştığım bir problem dizi/film izleme platformlarının içerik olarak sadece kendi bünyesindeki dizi/filmlerle sınırlı olması veya çok yüzeysel öneriler sunmasıydı. Örneğin “Inception” izlediğimde sistem sadece “bilim kurgu” türündeki başka filmleri önerir, ama aynı zihin oyunları veya duygusal derinlik etkisini taşımıyor. Kendi algoritmamda bu yüzden tür karşılaştırmasına bir oran verirken %40'a sınırlamak istedim ve benzer puanlı olanları da işin içine katarak bir algoritma oluşturmak istedim.
 
-Bana izlediğim bir filmi girince belirli kriterleri bir araya getirerek ona en benzer filmleri bulabilecek bir algoritma yazabilir misin? puan tür vb.
+ChatGpt'ye sorduğum soru: "Bana izlediğim bir filmi girince belirli kriterleri bir araya getirerek ona en benzer filmleri bulabilecek bir algoritma yazabilir misin? puan tür vb."
 
 ChatGpt'nin buna cevabı:
 Harika! 🎬 Bu tamamen öneri algoritması (recommendation system) tarzı bir problem ve algoritmasını adım adım pseudocode olarak yazabiliriz.
