@@ -2,7 +2,7 @@
 AD-SOYAD:Cansude Sayın
 seçtiğim algoritma "N kişi için adil pasta paylaşımı" bu ödevi ChatGpt'den yardım alarak yaptım.
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
-N kişi icin adil pasta paylasımı algoritmasını nasıl pseudocode ile yapabilirim? öncelikle yine bir taslak alıp üzerinden devam etmek istedim
+ChatGpt'ye sorduğum soru: N kişi icin adil pasta paylasımı algoritmasını nasıl pseudocode ile yapabilirim? öncelikle yine bir taslak alıp üzerinden devam etmek istedim
 Chatgpt'nin buna cevabı:
 
 Harika soru! 🎂
