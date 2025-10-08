@@ -90,7 +90,7 @@ Optimizasyon: Ağırlıklar sayesinde hangi kriterin daha önemli olduğunu beli
 İstersen bir sonraki adımda ben bunu örnek film ve oyuncularla simüle edip tabloyla gösterebilirim, böylece algoritmanın sonucu daha somut olur.
 Bunu yapayım mı?
 
-bu algoritmayı aynı filmi izleyenlerin beğendiği başka filmleri de önermesini sağlayacak şekilde Pseudocode yazar mısın? burada kullanıcı deneyimlerini de göz önünde bulundurarak benzerliği arttırmayı hedefledim
+ChatGpt'ye yazdığım: "bu algoritmayı aynı filmi izleyenlerin beğendiği başka filmleri de önermesini sağlayacak şekilde Pseudocode yazar mısın?" burada kullanıcı deneyimlerini de göz önünde bulundurarak benzerliği arttırmayı hedefledim
 
 ChatGpt'nin buna cevabı:
 Harika fikir 👏 Bu algoritma aslında hibrit öneri sistemi mantığında çalışıyor — yani hem içerik tabanlı (film özellikleri) hem de kullanıcı tabanlı (benzer izleyicilerin tercihleri) verileri kullanıyor.
