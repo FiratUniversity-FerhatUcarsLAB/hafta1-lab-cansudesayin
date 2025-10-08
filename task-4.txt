@@ -268,3 +268,5 @@ SON_İÇİN
 
 YAZDIR pay[k] değerlerini (her kişinin aldığı bölgeler)
 BİTİR
+
+burada verdiği cevaptan memmnun kaldığım için daha fazla bir işlem yaptırmadım
