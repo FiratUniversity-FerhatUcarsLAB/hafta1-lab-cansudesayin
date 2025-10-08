@@ -1,7 +1,34 @@
 Öğrenci No:250541096
 AD-SOYAD:Cansude Sayın
-seçtiğim algoritma "Optimum Bütçeli market alışverişi algoritması"
+seçtiğim algoritma "Optimum Bütçeli market alışverişi algoritması" bu ödevi ChatGpt'den yararlanarak yaptım.
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+ChatGpt'ye sorduğum soru; "Optimum Bütçeli market alışverişi algoritması için adım adım algoritma geliştirmek istiyorum. Koşullu durumları ve tekrar eden işlemleri de içeren detaylı bir pseudocode yazmama yardım eder misin?"
+ChatGpt'nin buna cevabı:
+Harika fikir 🌱 “Optimum bütçeli market alışverişi algoritması” hem koşullu durumlar (if-else) hem de tekrar eden işlemler (döngüler) içermeye çok uygun bir senaryo.
+Aşağıda sana adım adım açıklamalı şekilde ilerleyen ve sonunda tam bir pseudocode örneği vereceğim.
+
+🎯 Amaç
+
+Kullanıcının belirlediği bütçe içinde gereksinim önceliğine göre en uygun ürünleri satın almak.
+
+🧩 1. Algoritmanın Temel Mantığı
+Veri Girişi:
+-Bütçe girilir (butce)
+-Alışveriş listesi oluşturulur (ürün adı, fiyatı, önceliği)
+Listeyi Önceliğe Göre Sırala:
+-Öncelik değeri yüksek olan ürünler önce değerlendirilir.
+Ürünleri Bütçe Sınırında Sepete Ekle:
+-Her ürün için fiyat bütçeyi aşıyorsa alınmaz.
+-Bütçe yeterliyse sepete eklenir ve bütçeden düşülür.
+Fiyat Aşımı Kontrolü:
+-Eğer ürün alınamıyorsa, daha ucuz bir alternatif var mı kontrol edilir.
+-Yoksa ürün atlanır.
+Sonuç Gösterimi:
+-Alınan ürünlerin listesi
+-Kalan bütçe miktarı
+
+
+2. Koşullar ve Döngülerle Pseudocode
 ALGORITMA OptimumButceliMarketAlisverisi
 
 BAŞLA
@@ -72,3 +99,5 @@ BAŞLA
 BİTİR
 
 SON ALGORITMA
+
+burada verdiği cevaptan memmnun kaldığım için daha fazla bir işlem yaptırmadım sadece eklemeyi unuttuğu başla ve bitir kısmını ekledim.
