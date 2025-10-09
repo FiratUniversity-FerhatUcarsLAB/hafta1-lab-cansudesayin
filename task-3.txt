@@ -283,7 +283,7 @@ Yoksa önce fingerprint tabanlı dupe tespit bölümünü daha detaylı ve verim
 
 Hangi adımı istersin?
 
-ChatGpt'ye yazdığım: "Daha basitleştirilmiş ve anlaşılabilir versiyonunu arama stratejileri ve veri yapılandırmayı da kullanarak tekrar yapar mısın?"  burda verdiği kodu fazla detaylı ve pseudocode için yeterince anlaşılır bulmadığımdan kendi detaylarımı eklemeden önce daha basit versiyonu üzerinden ilerlemek istedim.
+ChatGpt'ye yazdığım: "Daha basitleştirilmiş ve anlaşılabilir versiyonunu arama stratejileri ve veri yapılandırmayı da kullanarak tekrar yapar mısın?"  burada verdiği kodu fazla detaylı ve pseudocode için yeterince anlaşılır bulmadığımdan kendi detaylarımı eklemeden önce daha basit versiyonu üzerinden ilerlemek istedim.
 
 Buna ChatGpt'nin cevabı:
 Harika 💿👏
@@ -433,5 +433,5 @@ Bu yöntem seçme sıralamasının temel mantığıdır.
 
 Bunu yapayım mı?
 
-ChatGpt'ye yazdığım: "Anladım gerek yok teşekkürler." Burada kodun üstteki halini anladığım için değiştirmek istemedim.
+ChatGpt'ye yazdığım: "Anladım gerek yok teşekkürler." Burada kodun üstteki halini anladığım için kodun yapısını bozmamak adına değiştirmek istemedim.
 
