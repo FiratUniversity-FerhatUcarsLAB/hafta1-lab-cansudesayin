@@ -48,6 +48,7 @@ Para yetersizse hamleyi optimize et (ipotek, satış, geçiş vs.)
 Sonuç:
 Seçilen hamleyi uygula
 Oyuncu durumu güncelle
+
 ALGORITMA MonopolyEnIyiHamle
 
 BAŞLA
@@ -112,7 +113,7 @@ Tekrar eden işlemler: her hamlede zar atma, mülk kontrolü, renk grubu kontrol
 Bu sayede algoritma sadece kurallara göre değil, stratejik olarak da en iyi seçimi yapar.
 Bunu ekleyelim mi?
 
-kodes durumlarını da ekler misin?  burada oyundaki hamleleri etkileyen diğer durumları da değerlendirmek, daha detaylı ve daha doğru bir kod almak açısından diğer durumları eklemesini tek tek istiyorum, böylece kodun bütün yapısını değiştirmek yerine ekleyerek devam ediyor. 
+ChatGpt'ye yazdığım: "kodes durumlarını da ekler misin?"  burada oyundaki hamleleri etkileyen diğer durumları da değerlendirmek, daha detaylı ve daha doğru bir kod almak açısından diğer durumları eklemesini tek tek istiyorum, böylece kodun bütün yapısını değiştirmek yerine ekleyerek devam ediyor. 
 
 Buna ChatGpt'nin cevabı:
 
@@ -242,9 +243,9 @@ Her olası hamleye (örneğin “mülk al”, “bekle”, “ipotek yap”) pua
 
 Bunu da ekleyeyim mi?
 
-şuana kadar güzel şimdi oyuncu bazı noktalara geldiğinde şans kartı da çeksin. Burada oyundaki diğer etmenleri de işin içine katarak oyun stratejisini daha fazla geliştirmeyi hedefledim.
-Buna ChatGpt'nin cevabı:
+ChatGpt'ye yazdığım: "şuana kadar güzel şimdi oyuncu bazı noktalara geldiğinde şans kartı da çeksin." Burada oyundaki diğer etmenleri de işin içine katarak oyun stratejisini daha fazla geliştirmeyi hedefledim.
 
+Buna ChatGpt'nin cevabı:
 Birkaç saniye düşündüm
 
 Harika — çok güçlü bir istek. 🎯 Aşağıda karar verme mantığı, rakip hareketlerini öngörme, optimal strateji geliştirme ve risk değerlendirmesi öğelerini birleştiren gelişmiş bir pseudocode veriyorum. Tamamen Türkçe anahtar kelimelerle, BAŞLA / BİTİR ile biçimlendirilmiş ve hem mantıksal hem de sayısal (simülasyon/puanlama) yaklaşımları içeriyor.
